@@ -4,9 +4,15 @@ function TodoApp() {
   const API_URL = "https://vaadin-todo-api.herokuapp.com/todos";
   const [task, setTask] = useState("");
   const [todos, setTodos] = useState([]);
+  const [error, setError] = useState("");
 
   const addTodo = async (e) => {
     e.preventDefault();
+    setError("");
+    if (!task) {
+      setError("Task cannot be empty");
+      return;
+    }
     const res = await fetch(API_URL, { method: "POST", body: task });
     setTodos([...todos, await res.json()]);
     setTask("");
@@ -34,6 +40,7 @@ function TodoApp() {
           value={task}
           onChange={(e) => setTask(e.target.value)}
         />
+        <div className="errors">{error}</div>
         <button type="submit">Add</button>
       </form>
       <ul>
